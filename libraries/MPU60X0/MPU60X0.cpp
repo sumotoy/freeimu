@@ -35,6 +35,7 @@ THE SOFTWARE.
 */
 
 #include "MPU60X0.h"
+#include <SPI.h>
 
 /** Default constructor, uses default I2C address or default SS Pin if SPI
  * @see MPU60X0_DEFAULT_ADDRESS

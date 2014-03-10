@@ -25,6 +25,9 @@ THE SOFTWARE.
 #ifndef _HELPER_3DMATH_H_
 #define _HELPER_3DMATH_H_
 
+#if defined(__MK20DX128__) || defined(__MK20DX256__)
+#include "arm_math.h"
+#endif
 class Quaternion {
     public:
         float w;
@@ -64,7 +67,11 @@ class Quaternion {
         }
         
         float getMagnitude() {
-            return sqrt(w*w + x*x + y*y + z*z);
+			#if defined(__MK20DX128__) || defined(__MK20DX256__)
+			return arm_sqrt_f32(w*w + x*x + y*y + z*z);
+			#else
+			return sqrt(w*w + x*x + y*y + z*z);
+			#endif
         }
         
         void normalize() {
@@ -101,7 +108,12 @@ class VectorInt16 {
         }
 
         float getMagnitude() {
-            return sqrt(x*x + y*y + z*z);
+            //
+			#if defined(__MK20DX128__) || defined(__MK20DX256__)
+			return arm_sqrt_f32(x*x + y*y + z*z);
+			#else
+			return sqrt(x*x + y*y + z*z);
+			#endif
         }
 
         void normalize() {
@@ -168,7 +180,12 @@ class VectorFloat {
         }
 
         float getMagnitude() {
-            return sqrt(x*x + y*y + z*z);
+            //
+			#if defined(__MK20DX128__) || defined(__MK20DX256__)
+			return arm_sqrt_f32(x*x + y*y + z*z);
+			#else
+			return sqrt(x*x + y*y + z*z);
+			#endif
         }
 
         void normalize() {

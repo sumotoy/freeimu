@@ -32,6 +32,9 @@ THE SOFTWARE.
 
 #include "MPU60X0.h"
 #include <avr/pgmspace.h>
+#if defined(__MK20DX128__) || defined(__MK20DX256__)
+#include "arm_math.h"
+#endif
 
 /* Source is from the InvenSense MotionApps v2 demo code. Original source is
  * unavailable, unless you happen to be amazing as decompiling binary by
@@ -618,9 +621,17 @@ uint8_t MPU60X0::dmpGetGravity(VectorFloat *v, Quaternion *q) {
 // uint8_t MPU60X0::dmpGetEIS(long *data, const uint8_t* packet);
 
 uint8_t MPU60X0::dmpGetEuler(float *data, Quaternion *q) {
+#if defined(__MK20DX128__) || defined(__MK20DX256__)
     data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);   // psi
     data[1] = -asin(2*q -> x*q -> z + 2*q -> w*q -> y);                              // theta
     data[2] = atan2(2*q -> y*q -> z - 2*q -> w*q -> x, 2*q -> w*q -> w + 2*q -> z*q -> z - 1);   // phi
+#else
+    data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);   // psi
+    data[1] = -asin(2*q -> x*q -> z + 2*q -> w*q -> y);                              // theta
+    data[2] = atan2(2*q -> y*q -> z - 2*q -> w*q -> x, 2*q -> w*q -> w + 2*q -> z*q -> z - 1);   // phi
+#endif
+
+
     return 0;
 }
 uint8_t MPU60X0::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity) {

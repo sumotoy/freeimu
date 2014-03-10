@@ -25,11 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MS561101BA_h
 #define MS561101BA_h
-
+#if defined(__AVR__)
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
-
+#endif
 #include "Arduino.h"
 #include <Wire.h>
 
@@ -81,6 +81,15 @@ class MS561101BA {
     uint8_t _addr;
     uint16_t _Cal[MS561101BA_PROM_REG_COUNT];
     uint32_t pressCache, tempCache;
+	
+	
+static inline uint32_t millisFix(void)
+{
+		asm volatile("" ::: "memory");
+        volatile uint32_t ret = systick_millis_count; // single aligned 32 bit is atomic;
+		asm volatile("" ::: "memory");
+        return ret;
+}
 };
 
 #endif // MS561101BA_h
